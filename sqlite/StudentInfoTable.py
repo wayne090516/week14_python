@@ -80,11 +80,18 @@ class StudentInfoTable:
 
     def update_student_score(self, student_name, subject, score):
         stu_id = self.select_a_student(student_name)
-        if stu_id:
-            command = "UPDATE subject_info SET score = {} WHERE stu_id = {} AND subject = '{}';".format(score, stu_id[0], subject)
-            with DBConnection() as connection:
-                cursor = connection.cursor()
-                cursor.execute(command)
-                connection.commit()
-        else:
+        if not stu_id:
             print("Student not found.")
+            return
+
+        # 尝试更新科目分数
+        command = "UPDATE subject_info SET score = {} WHERE stu_id = {} AND subject = '{}';".format(score, stu_id[0], subject)
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            connection.commit()
+            if cursor.rowcount == 0:  # 没有行受到影响，意味着这个学生没有这个科目的成绩记录
+                # 插入新的科目分数
+                insert_command = "INSERT INTO subject_info (stu_id, subject, score) VALUES  ({}, '{}', {});".format(stu_id[0], subject, score)
+                cursor.execute(insert_command)
+                connection.commit()

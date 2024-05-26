@@ -1,16 +1,17 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QSlider, QMainWindow
+from PyQt6.QtGui import QPixmap, QPalette, QBrush, QMovie
+from PyQt6.QtCore import Qt, QSize
 from WorkWidgets.AddStuWidget import AddStuWidget
+from WorkWidgets.DelStuWidget import DelStuWidget
 from WorkWidgets.ShowStuWidget import ShowStuWidget
+from WorkWidgets.ModifyStuWidget import ModifyStuWidget
 from WorkWidgets.Music import Music
 from WorkWidgets.WidgetComponents import *
 from client.ServiceCtrl import ServiceCtrl
 import threading
-import os
-from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QSlider
-from PyQt6.QtGui import QPixmap, QPalette, QBrush, QMovie
-from PyQt6.QtCore import Qt
 import sys
-
+import os
 
 class MainWidget(QtWidgets.QWidget):
     def __init__(self):
@@ -31,6 +32,12 @@ class MainWidget(QtWidgets.QWidget):
         label.setMovie(self.movie)
         self.movie.start()
         layout.addWidget(label, 1, 3, 1, 1)
+
+        oImage = QPixmap("WorkWidgets/source/pic02.jpg")
+        sImage = oImage.scaled(QSize(1200,600))
+        palette = QPalette()
+        palette.setBrush(QPalette.ColorRole.Window, QBrush(sImage))
+        self.setPalette(palette)
 
         layout.setColumnStretch(0, 1)
         layout.setColumnStretch(1, 4)
@@ -65,12 +72,13 @@ class MenuWidget(QtWidgets.QWidget):
         modify_button.clicked.connect(lambda: self.update_widget_callback("modify"))
 
         self.music = Music(os.path.join(os.getcwd(), "WorkWidgets/source/music.mp3")) 
-
+        
         self.volume_slider = QSlider(Qt.Orientation.Vertical)  # Create a slider
         self.volume_slider.setValue(100)  # Set initial volume to 100
         self.volume_slider.setMinimum(0)  # Set the minimum value to 0
         self.volume_slider.setMaximum(100)  # Set the maximum value to 100
         self.volume_slider.valueChanged.connect(self.music.set_volume)  # Connect the slider to the set_volume function
+        self.volume_slider.setFixedWidth(20)
         set_volume = LabelComponent(14, "volume")
 
         self.music_thread = threading.Thread(target=self.start_music)
@@ -107,7 +115,9 @@ class FunctionWidget(QtWidgets.QStackedWidget):
         super().__init__()
         self.widget_dict = {
             "add": self.addWidget(AddStuWidget()),
-            "show": self.addWidget(ShowStuWidget())
+            "show": self.addWidget(ShowStuWidget()),
+            "del": self.addWidget(DelStuWidget()),
+            "modify": self.addWidget(ModifyStuWidget())
         }
         self.update_widget("show")
     

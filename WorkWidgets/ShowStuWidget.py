@@ -10,7 +10,7 @@ class ShowStuWidget(QtWidgets.QWidget):
         self.setObjectName("show_stu_widget")
 
         layout = QtWidgets.QVBoxLayout()
-
+        self.setStyleSheet("background-color:transparent; border: none")
         header_label = LabelComponent(20, "Show Student") 
         layout.addWidget(header_label)
 
@@ -45,10 +45,10 @@ class ShowStuWidget(QtWidgets.QWidget):
 
             student_label = QtWidgets.QLabel(student_details, self)
             student_label.setText(student_details)
-            student_label.setFont(QtGui.QFont("Arial", 14))
+            student_label.setFont(QtGui.QFont("Arial", 20))
             self.scrollLayout.addWidget(student_label)
 
     def load(self):
-        print("show widget")
         data = self.service_ctrl.show()
         self.update_show(data)
+        print("show widget")

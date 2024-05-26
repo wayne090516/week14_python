@@ -1,6 +1,5 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
 from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent
-import time
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import QMessageBox
 import json
@@ -12,7 +11,7 @@ class AddStuWidget(QtWidgets.QWidget):
         self.setObjectName("add_stu_widget")
         layout = QtWidgets.QGridLayout()
         self.scores = {}
-        header_label = LabelComponent(20, "Add Student")
+        header_label = LabelComponent(20, "Add  Student")
         self.service_ctrl = ServiceCtrl()
         next_step = LabelComponent(16, "Next step")
         # ------label & editor-----------------------------------------------------
@@ -139,6 +138,7 @@ class AddStuWidget(QtWidgets.QWidget):
         self.editor_label_score.clear()
         # Reset progress bar status for score input box
         self.score_progress_added = False
+        
     def check_empty(self):
         if self.editor_label_subject.text().strip() and self.editor_label_score.text().strip():
             self.message_label.setText("Press add.")

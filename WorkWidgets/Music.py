@@ -7,7 +7,7 @@ class Music:
         pygame.mixer.init()
         self.is_loaded = threading.Event()
         self.file_path = file_path
-        self.volume = 1
+        self.volume = 0
         
         try:
             pygame.mixer.music.load(self.file_path)
