@@ -130,9 +130,14 @@ class ModifyStuWidget(QtWidgets.QWidget):
 
     def send_act(self): 
         student_name = self.editor_label_name.currentText().strip()
+        existing_subjects = self.get_subjects_for_student(student_name)
 
         if self.rb_add.isChecked():
             subject = self.editor_label_subject.text().strip()
+            if subject in existing_subjects:
+                QMessageBox.warning(self, 'Duplicate Subject', 'This subject already exists in the database for the selected student.')
+                self.clear_fields() 
+                return
         else:
             subject = self.subject_combo_box.currentText().strip()
 
@@ -165,13 +170,15 @@ class ModifyStuWidget(QtWidgets.QWidget):
             self.editor_label_subject.show()
             self.message_label.setText("Input a subject and score.")
 
-    def get_subjects(self, index):
-        # Get the current student name.
-        current_student_name = self.editor_label_name.itemText(index)
-
+    def get_subjects_for_student(self, student_name):
         # Get subjects for the current student.
-        student_info = self.scores.get(current_student_name, {}) # Here, use self.scores instead of data.
+        student_info = self.scores.get(student_name, {})
         student_subjects = [score['subject'] for score in student_info.get('scores', [])]
+        return student_subjects
+
+    def get_subjects(self, index):
+        current_student_name = self.editor_label_name.itemText(index)
+        student_subjects = self.get_subjects_for_student(current_student_name)
 
         # Update the combo box with the current student's subjects.
         self.subject_combo_box.clear()
