@@ -1,8 +1,6 @@
 from PyQt6 import QtWidgets, QtCore
 from WorkWidgets.WidgetComponents import LabelComponent, ButtonComponent
 from client.ServiceController import ExecuteCommand
-from WorkWidgets.ShowAllWidget import ShowAllWidget
-
 
 class DeleteStuWidget(QtWidgets.QWidget):
     window_closed = QtCore.pyqtSignal()
@@ -19,12 +17,12 @@ class DeleteStuWidget(QtWidgets.QWidget):
 
         layout = QtWidgets.QGridLayout()
 
-        self.confirm_button = ButtonComponent("CONFIRM")
+        self.confirm_button = ButtonComponent(16, content="CONFIRM")
         self.confirm_button.clicked.connect(self.confirm_button_pressed)
         self.confirm_button.setEnabled(True)
         layout.addWidget(self.confirm_button, 2, 0, 1, 1)
 
-        self.cancel_button = ButtonComponent("CANCEL")
+        self.cancel_button = ButtonComponent(16, content="CANCEL")
         self.cancel_button.clicked.connect(self.cancel_button_pressed)
         self.cancel_button.setEnabled(True)
         layout.addWidget(self.cancel_button, 2, 2, 1, 1)

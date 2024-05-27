@@ -23,21 +23,29 @@ class LabelComponent(QtWidgets.QLabel):
         
 
 class LineEditComponent(QtWidgets.QLineEdit):
-    def __init__(self, default_content="", length=10, width=200, font_size=16):
+    def __init__(self, font_size=16, default_content="", alignment="left"):
         super().__init__()
-        self.setMaxLength(length)
+
+        if alignment == "left":
+            self.setAlignment(QtCore.Qt.AlignmentFlag.AlignLeft)
+        elif alignment == "center":
+            self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        elif alignment == "right":
+            self.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+
+        # self.setMaxLength(length)
         self.setText(default_content)
         self.setMinimumHeight(30)
-        self.setMaximumWidth(width)
+        # self.setMaximumWidth(width)
         self.setFont(QtGui.QFont("微軟正黑體", font_size))
 
     def clear_editor_content(self, event):
         self.clear()
 
 class ButtonComponent(QtWidgets.QPushButton):
-    def __init__(self, text, font_size=16):
+    def __init__(self, font_size=16, content=""):
         super().__init__()
-        self.setText(text)
+        self.setText(content)
         self.setFont(QtGui.QFont("微軟正黑體", font_size))
 
 class ScrollLabelComponent(QtWidgets.QWidget):
@@ -118,3 +126,8 @@ class ClickableLabel(QtWidgets.QLabel):
     def mousePressEvent(self, event):
         self.clicked.emit(self.text)
         super().mousePressEvent(event)
+
+class ComboBoxComponent(QtWidgets.QComboBox):
+    def __init__(self, font_size=16):
+        super().__init__()
+        self.setFont(QtGui.QFont("微軟正黑體", font_size))

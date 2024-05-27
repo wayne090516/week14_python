@@ -22,13 +22,13 @@ class AddStuWidget(QtWidgets.QWidget):
         content_label_name = LabelComponent(16, content="Name:", 
                                             alignment="right", bg_color=None, 
                                             font_color=None, border_color="lightgray")
-        self.editor_label_name = LineEditComponent("Name")
+        self.editor_label_name = LineEditComponent(16, default_content="Name",alignment="left")
         self.editor_label_name.mousePressEvent = self.editor_label_name.clear_editor_content
         self.editor_label_name.textChanged.connect(self.name_entered)
         layout.addWidget(content_label_name, 0, 0, 1, 1)
         layout.addWidget(self.editor_label_name, 0, 1, 1, 2)
 
-        self.button_query = ButtonComponent("Check")
+        self.button_query = ButtonComponent(16, content="Check")
         self.button_query.clicked.connect(self.query_pressed)
         self.button_query.setEnabled(False)
         layout.addWidget(self.button_query, 0, 3, 1, 2)
@@ -37,14 +37,14 @@ class AddStuWidget(QtWidgets.QWidget):
         content_label_subject = LabelComponent(16, content="Subject:", 
                                                alignment="right", bg_color=None, 
                                                font_color=None, border_color="lightgray")
-        self.editor_label_subject = LineEditComponent("Subject")
+        self.editor_label_subject = LineEditComponent(16, default_content="Subject",alignment="left")
         self.editor_label_subject.mousePressEvent = self.editor_label_subject.clear_editor_content
         self.editor_label_subject.textChanged.connect(self.subject_blanked)
         self.editor_label_subject.setEnabled(False)
         layout.addWidget(content_label_subject, 1, 0, 1, 1)
         layout.addWidget(self.editor_label_subject, 1, 1, 1, 2)
 
-        self.button_add = ButtonComponent("Add")
+        self.button_add = ButtonComponent(16, content="Add")
         self.button_add.clicked.connect(self.add_pressed)
         self.button_add.setEnabled(False)
         layout.addWidget(self.button_add, 1, 3, 1, 2)
@@ -54,7 +54,7 @@ class AddStuWidget(QtWidgets.QWidget):
         content_label_score = LabelComponent(16, content="Score:", 
                                              alignment="right", bg_color=None, 
                                              font_color=None, border_color="lightgray")
-        self.editor_label_score = LineEditComponent("Score")
+        self.editor_label_score = LineEditComponent(16, default_content="Score",alignment="left")
         self.editor_label_score.mousePressEvent = self.editor_label_score.clear_editor_content
         self.editor_label_score.setValidator(QtGui.QIntValidator(0, 100)) # QtGui.QIntValidator(min_value, max_value)
         self.editor_label_score.textChanged.connect(self.score_blanked)
@@ -62,7 +62,7 @@ class AddStuWidget(QtWidgets.QWidget):
         layout.addWidget(content_label_score, 2, 0, 1, 1)
         layout.addWidget(self.editor_label_score, 2, 1, 1, 2)
 
-        self.button_send = ButtonComponent("Send")
+        self.button_send = ButtonComponent(16, content="Send")
         self.button_send.clicked.connect(self.send_pressed)
         self.button_send.setEnabled(False)
         layout.addWidget(self.button_send, 2, 3, 1, 2)

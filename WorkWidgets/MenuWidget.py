@@ -3,6 +3,7 @@ from WorkWidgets.WidgetComponents import ButtonComponent
 from WorkWidgets.AddStuWidget import AddStuWidget
 from WorkWidgets.ModifyStuWidget import ModifyStuWidget
 from WorkWidgets.DeleteStuWidget import DeleteStuWidget
+from WorkWidgets.ShowAllWidget import ShowAllWidget
 
 
 class MenuWidget(QtWidgets.QWidget):
@@ -15,9 +16,9 @@ class MenuWidget(QtWidgets.QWidget):
         self.setObjectName("menu_widget")
 
         layout = QtWidgets.QGridLayout()
-        self.add_stu_button = ButtonComponent("Add student")
-        self.modify_stu_button = ButtonComponent("Modify student")
-        self.delete_stu_button = ButtonComponent("Delete student")
+        self.add_stu_button = ButtonComponent(16, content="Add student")
+        self.modify_stu_button = ButtonComponent(16, content="Modify student")
+        self.delete_stu_button = ButtonComponent(16, content="Delete student")
 
         self.add_stu_button.setEnabled(True)
         self.modify_stu_button.setEnabled(True)
@@ -44,7 +45,8 @@ class MenuWidget(QtWidgets.QWidget):
         self.add_stu_popup.show()
 
     def modify_student_popup(self):
-        self.modify_stu_popup = ModifyStuWidget()
+        self.show_all_widget = ShowAllWidget()
+        self.modify_stu_popup = ModifyStuWidget(self.show_all_widget.names, self.show_all_widget.subjects_dict)
         self.modify_stu_popup.setWindowModality(QtCore.Qt.WindowModality.ApplicationModal)
         self.modify_stu_popup.window_closed.connect(self.modify_student_closed.emit)
         self.modify_stu_popup.show()

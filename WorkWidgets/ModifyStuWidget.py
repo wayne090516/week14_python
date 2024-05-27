@@ -1,15 +1,17 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
-from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent
+from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, ComboBoxComponent
 from client.ServiceController import ExecuteCommand
+from WorkWidgets.ShowAllWidget import ShowAllWidget
 import json
 
 class ModifyStuWidget(QtWidgets.QWidget):
     window_closed = QtCore.pyqtSignal()
 
-    def __init__(self):
+    def __init__(self, names_list, subject_dict):
         super().__init__()
 
-        self.scores_dict = dict()
+        self.names_list = names_list
+        self.subject_dict = subject_dict
 
         self.setObjectName("modify_stu_widget")
         self.setWindowTitle("Modify Student")
@@ -17,67 +19,68 @@ class ModifyStuWidget(QtWidgets.QWidget):
 
         layout = QtWidgets.QGridLayout()
 
-        # Name and Query-button
+        # Name
         content_label_name = LabelComponent(16, content="Name:", 
                                             alignment="right", bg_color=None, 
                                             font_color=None, border_color="lightgray")
-        self.editor_label_name = LineEditComponent("Name")
-        self.editor_label_name.mousePressEvent = self.editor_label_name.clear_editor_content
-        self.editor_label_name.textChanged.connect(self.name_entered)
+        
+        self.combobox_name = ComboBoxComponent()
+        self.name_list_parse(self.names_list)
+        self.combobox_name.currentTextChanged.connect(self.name_change)
+
         layout.addWidget(content_label_name, 0, 0, 1, 1)
-        layout.addWidget(self.editor_label_name, 0, 1, 1, 2)
+        layout.addWidget(self.combobox_name, 0, 1, 1, 2)
 
-        self.button_query = ButtonComponent("Check")
-        self.button_query.clicked.connect(self.query_pressed)
-        self.button_query.setEnabled(False)
-        layout.addWidget(self.button_query, 0, 3, 1, 2)
-
-        # Subject and Add-button
+        # Subject
         content_label_subject = LabelComponent(16, content="Subject:", 
                                                alignment="right", bg_color=None, 
                                                font_color=None, border_color="lightgray")
-        self.editor_label_subject = LineEditComponent("Subject")
-        self.editor_label_subject.mousePressEvent = self.editor_label_subject.clear_editor_content
-        self.editor_label_subject.textChanged.connect(self.subject_blanked)
-        self.editor_label_subject.setEnabled(False)
+        
+        self.combobox_subject = ComboBoxComponent()
+        self.combobox_subject.currentTextChanged.connect(self.subject_change)
+
+        self.editor_label_newsubject = LineEditComponent(16, default_content="New Subject",alignment="center")
+        self.editor_label_newsubject.textChanged.connect(self.newsubject_blanked)
+        self.editor_label_newsubject.mousePressEvent = self.editor_label_newsubject.clear_editor_content
+
+        self.combobox_subject.setEnabled(False)
+        self.editor_label_newsubject.setEnabled(False)
+
         layout.addWidget(content_label_subject, 1, 0, 1, 1)
-        layout.addWidget(self.editor_label_subject, 1, 1, 1, 2)
-
-        self.button_add = ButtonComponent("Add")
-        self.button_add.clicked.connect(self.add_pressed)
-        self.button_add.setEnabled(False)
-        layout.addWidget(self.button_add, 1, 3, 1, 2)
-
+        layout.addWidget(self.combobox_subject, 1, 1, 1, 2)
+        layout.addWidget(self.editor_label_newsubject, 2, 1, 1, 2)
 
         # Score and Send-button
         content_label_score = LabelComponent(16, content="Score:", 
                                              alignment="right", bg_color=None, 
                                              font_color=None, border_color="lightgray")
-        self.editor_label_score = LineEditComponent("Score")
+        
+        self.editor_label_score = LineEditComponent(16, default_content="Score",alignment="center")
         self.editor_label_score.mousePressEvent = self.editor_label_score.clear_editor_content
         self.editor_label_score.setValidator(QtGui.QIntValidator(0, 100)) # QtGui.QIntValidator(min_value, max_value)
         self.editor_label_score.textChanged.connect(self.score_blanked)
         self.editor_label_score.setEnabled(False)
-        layout.addWidget(content_label_score, 2, 0, 1, 1)
-        layout.addWidget(self.editor_label_score, 2, 1, 1, 2)
 
-        self.button_send = ButtonComponent("Send")
+        layout.addWidget(content_label_score, 3, 0, 1, 1)
+        layout.addWidget(self.editor_label_score, 3, 1, 1, 2)
+
+        self.button_send = ButtonComponent(16, content="Modify")
         self.button_send.clicked.connect(self.send_pressed)
         self.button_send.setEnabled(False)
-        layout.addWidget(self.button_send, 2, 3, 1, 2)
-      
+
+        layout.addWidget(self.button_send, 4, 0, 1, 3)
 
         # Respond-window 
         self.respond_window = LabelComponent(16, content="", 
                                              alignment="left", bg_color=None, 
                                              font_color="red",border_color="lightgray")
-        layout.addWidget(self.respond_window, 3, 0, 1, 5)
         
-
+        layout.addWidget(self.respond_window, 5, 0, 1, 3)
+        
         # Set Layouts
-        for i in range(5):
+        for i in range(3):
             layout.setColumnStretch(i, 1)
-        for i in range(4):
+        for i in range(6):
             layout.setRowStretch(i, 1)
 
         self.setLayout(layout)
@@ -87,71 +90,83 @@ class ModifyStuWidget(QtWidgets.QWidget):
         event.accept()
 
     def load(self):
-        self.respond_window.setText("")
-        self.editor_label_name.setText("Name")
-        self.editor_label_subject.setText("Subject")
-        self.editor_label_score.setText("Score")
-        self.editor_label_name.setEnabled(True)
-        self.editor_label_subject.setEnabled(False)
+        self.combobox_name.clear()
+        self.combobox_subject.clear()
+        self.editor_label_newsubject.setEnabled(False)
+        self.editor_label_score.setText("")
         self.editor_label_score.setEnabled(False)
-        self.button_query.setEnabled(False)
-        self.button_add.setEnabled(False)
-        self.button_send.setEnabled(False)
-        self.scores_dict = dict()
-
-    def query_pressed(self):
-        self.button_query.setEnabled(False)
-        self.name = self.editor_label_name.text()
-        query_data = {"name": self.name}
-        self.execute_query = ExecuteCommand(command="query", data=query_data)
-        self.execute_query.start()
-        self.execute_query.return_sig.connect(self.query_action_result)
-
-    def query_action_result(self, result):
-        status = eval(json.loads(result))["status"]
-
-        if status == "Fail":
-            self.editor_label_name.setEnabled(False)
-            self.editor_label_subject.setEnabled(True)
-            self.editor_label_score.setEnabled(True)
-            self.respond_window.setText("Please add student's content")
-        elif status == "OK":
-            self.editor_label_name.setText("Name")
-            self.respond_window.setText("The student already existed!")
-
-    def add_pressed(self):
-        if (self.editor_label_name.text()=="" or self.editor_label_subject.text()=="" or self.editor_label_score.text()==""):
-            self.respond_window.setText("Please enter the subject and score for the student")
-        else:
-            self.button_send.setEnabled(True)
-            self.scores_dict[self.editor_label_subject.text()] = self.editor_label_score.text()
-            self.parameters = {'name': self.name, 'scores': self.scores_dict}
-            self.respond_window.setText(f"{self.parameters} added")
+        self.editor_label_newsubject.setText("")
+        self.show_all_widget = ShowAllWidget()
+        self.show_all_widget.get_refreshed_data()
+        self.names_list = self.show_all_widget.names
+        self.subject_dict = self.show_all_widget.subjects_dict
+        self.name_list_parse(self.names_list)
 
     def send_pressed(self):
-        send_data = self.parameters
-        self.execute_send = ExecuteCommand(command="add", data=send_data)
-        self.execute_send.start()
-        self.execute_send.return_sig.connect(self.send_action_result)
+        repeated_flag = False
+        if self.combobox_subject.currentText()!="add new score":
+            parts = self.combobox_subject.currentText().split(':')
+            subject_score = {parts[0]: self.editor_label_score.text()}
+        else:
+            for subject in self.subjects:
+                if self.editor_label_newsubject.text() == str(subject.split(':')[0]) :
+                    self.button_send.setEnabled(False)
+                    self.respond_window.setText("The subject already exists, please enter a new subject!")
+                    self.editor_label_newsubject.setText("")
+                    self.editor_label_score.setText("")
+                    repeated_flag = True
+                else:
+                    subject_score = {self.editor_label_newsubject.text(): self.editor_label_score.text()}
+                    self.button_send.setEnabled(True)
+
+        if not repeated_flag:
+            self.send_data = {'name': self.combobox_name.currentText(), 'scores': subject_score}
+            self.execute_send = ExecuteCommand(command="modify", data=self.send_data)
+            self.execute_send.start()
+            self.execute_send.return_sig.connect(self.send_action_result)
 
     def send_action_result(self, result):
         status = eval(json.loads(result))["status"]
 
         if status == "Fail":
-            self.respond_window.setText("Add " + str(self.parameters) + " failed!")
+            self.respond_window.setText("Modify " + str(self.send_data) + " failed!")
         elif status == "OK":
             self.load()
-            self.respond_window.setText("Add " + str(self.parameters) + " successfully!")
+            self.respond_window.setText("Modify " + str(self.send_data) + " successfully!")
 
-    def name_entered(self):
-        if self.editor_label_name.text() != "":
-            self.button_query.setEnabled(True)
-
-    def subject_blanked(self):
-        if self.editor_label_subject.text() == "":
-            self.button_send.setEnabled(False)
-    
     def score_blanked(self):
         if self.editor_label_score.text() == "":
-            self.button_add.setEnabled(True)
             self.button_send.setEnabled(False)
+        else:
+            self.button_send.setEnabled(True)
+
+    def newsubject_blanked(self):
+        if self.editor_label_newsubject.text() == "":
+            self.editor_label_score.setEnabled(False)
+        else:
+            self.editor_label_score.setEnabled(True)
+
+    def name_list_parse(self, name_list):
+        self.combobox_name.addItem("")
+        for name in name_list:
+            self.combobox_name.addItem(name)
+
+    def name_change(self):
+        if self.combobox_name.currentText()!="":
+            self.combobox_subject.setEnabled(True)
+            self.combobox_subject.clear()
+            self.editor_label_score.setText("")
+            self.subjects = self.subject_dict[self.combobox_name.currentText()]
+            self.combobox_subject.addItem("add new score")
+            for subject in self.subjects:
+                self.combobox_subject.addItem(subject)
+
+        self.editor_label_newsubject.setEnabled(True)
+            
+    def subject_change(self):
+        self.editor_label_score.setEnabled(True)
+        self.editor_label_newsubject.setText("")
+        if self.combobox_subject.currentText()!="add new score":
+            self.editor_label_newsubject.setEnabled(False)
+        else:
+            self.editor_label_newsubject.setEnabled(True)

@@ -12,6 +12,7 @@ class ShowAllWidget(QtWidgets.QWidget):
         self.setObjectName("show_all_widget")
 
         self.names = []
+        self.result = {}
         self.subjects_dict = {}
 
         self.show_all_layout = QtWidgets.QGridLayout()
@@ -53,8 +54,8 @@ class ShowAllWidget(QtWidgets.QWidget):
         return self.names, self.subjects_dict
 
     def show_action_result(self, result):
-        result = eval(json.loads(result))
-        student_dict = result["parameters"]
+        self.result = eval(json.loads(result))
+        student_dict = self.result["parameters"]
 
         self.names = []
         self.subjects_dict = {}
