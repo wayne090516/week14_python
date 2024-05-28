@@ -71,13 +71,13 @@ class ModifyStuWidget(QtWidgets.QWidget):
         layout.addWidget(content_label_score, 3, 0, 1, 1)
         layout.addWidget(self.editor_label_score, 3, 1, 1, 2)
 
-        self.button_send = ButtonComponent(16, content="Modify", 
+        self.button_modify = ButtonComponent(16, content="Modify", 
                                            style='''ButtonComponent{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #808080, stop:1 #404040); border-radius: 5px; color: #00cc00}
                                                     ButtonComponent:hover {background-color: #606060;}''')
-        self.button_send.clicked.connect(self.send_pressed)
-        self.button_send.setEnabled(False)
+        self.button_modify.clicked.connect(self.modify_pressed)
+        self.button_modify.setEnabled(False)
 
-        layout.addWidget(self.button_send, 4, 0, 1, 3)
+        layout.addWidget(self.button_modify, 4, 0, 1, 3)
 
         # Respond-window 
         self.respond_window = LabelComponent(16, content="", alignment="left", 
@@ -100,17 +100,17 @@ class ModifyStuWidget(QtWidgets.QWidget):
     def load(self):
         self.combobox_name.clear()
         self.combobox_subject.clear()
+        self.editor_label_newsubject.setText("New Subject")
         self.editor_label_newsubject.setEnabled(False)
-        self.editor_label_score.setText("")
+        self.editor_label_score.setText("Score")
         self.editor_label_score.setEnabled(False)
-        self.editor_label_newsubject.setText("")
         self.show_all_widget = ShowAllWidget()
         self.show_all_widget.get_refreshed_data()
         self.names_list = self.show_all_widget.names
         self.subject_dict = self.show_all_widget.subjects_dict
         self.name_list_parse(self.names_list)
 
-    def send_pressed(self):
+    def modify_pressed(self):
         repeated_flag = False
         if self.combobox_subject.currentText()!="add new score":
             parts = self.combobox_subject.currentText().split(':')
@@ -118,37 +118,38 @@ class ModifyStuWidget(QtWidgets.QWidget):
         else:
             for subject in self.subjects:
                 if self.editor_label_newsubject.text() == str(subject.split(':')[0]) :
-                    self.button_send.setEnabled(False)
+                    self.button_modify.setEnabled(False)
                     self.respond_window.setText("The subject already exists, please enter a new subject!")
                     self.editor_label_newsubject.setText("")
                     self.editor_label_score.setText("")
                     repeated_flag = True
                 else:
                     subject_score = {self.editor_label_newsubject.text(): self.editor_label_score.text()}
-                    self.button_send.setEnabled(True)
+                    self.button_modify.setEnabled(True)
 
         if not repeated_flag:
             self.send_data = {'name': self.combobox_name.currentText(), 'scores': subject_score}
-            self.execute_send = ExecuteCommand(command="modify", data=self.send_data)
-            self.execute_send.start()
-            self.execute_send.return_sig.connect(self.send_action_result)
+            self.execute_modify = ExecuteCommand(command="modify", data=self.send_data)
+            self.execute_modify.start()
+            self.execute_modify.return_sig.connect(self.modify_action_result)
 
-    def send_action_result(self, result):
+    def modify_action_result(self, result):
         status = eval(json.loads(result))["status"]
+        self.load()
 
         if status == "Fail":
             self.respond_window.setText("Modify " + str(self.send_data) + " failed!")
         elif status == "OK":
-            self.load()
             self.respond_window.setText("Modify " + str(self.send_data) + " successfully!")
 
     def score_blanked(self):
         if self.editor_label_score.text() == "":
-            self.button_send.setEnabled(False)
+            self.button_modify.setEnabled(False)
         else:
-            self.button_send.setEnabled(True)
+            self.button_modify.setEnabled(True)
 
     def newsubject_blanked(self):
+        self.editor_label_score.setText("Score")
         if self.editor_label_newsubject.text() == "":
             self.editor_label_score.setEnabled(False)
         else:
@@ -163,18 +164,21 @@ class ModifyStuWidget(QtWidgets.QWidget):
         if self.combobox_name.currentText()!="":
             self.combobox_subject.setEnabled(True)
             self.combobox_subject.clear()
-            self.editor_label_score.setText("")
+            self.editor_label_score.setText("Score")
+            self.editor_label_newsubject.setText("New Subject")
+            self.editor_label_newsubject.setEnabled(True)
             self.subjects = self.subject_dict[self.combobox_name.currentText()]
             self.combobox_subject.addItem("add new score")
             for subject in self.subjects:
                 self.combobox_subject.addItem(subject)
 
-        self.editor_label_newsubject.setEnabled(True)
             
     def subject_change(self):
-        self.editor_label_score.setEnabled(True)
-        self.editor_label_newsubject.setText("")
-        if self.combobox_subject.currentText()!="add new score":
-            self.editor_label_newsubject.setEnabled(False)
-        else:
-            self.editor_label_newsubject.setEnabled(True)
+        if self.combobox_name.currentText()!="":
+            self.editor_label_score.setEnabled(True)
+            self.editor_label_score.setText("Score")
+            self.editor_label_newsubject.setText("New Subject")
+            if self.combobox_subject.currentText()!="add new score":
+                self.editor_label_newsubject.setEnabled(False)
+            else:
+                self.editor_label_newsubject.setEnabled(True)
