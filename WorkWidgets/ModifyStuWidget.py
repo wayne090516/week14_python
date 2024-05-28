@@ -27,8 +27,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         
         label_score = LabelComponent(16, "Score：")
         self.editor_label_score = LineEditComponent("")
-        validator = QIntValidator(0, 999, self)
-        self.editor_label_score.setValidator(validator)
+        self.editor_label_score.setValidator(QtGui.QIntValidator(0, 100))
         
         self.editor_label_name = QtWidgets.QComboBox()
         self.editor_label_name.setFont(font)
