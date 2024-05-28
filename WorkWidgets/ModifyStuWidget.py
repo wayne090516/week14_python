@@ -38,8 +38,6 @@ class ModifyStuWidget(QtWidgets.QWidget):
         self.service_ctrl.start()   
         self.service_ctrl.show()
 
-        #self.editor_label_name.currentIndexChanged.connect(self.check_conditions)
-
         self.rb_add = QtWidgets.QRadioButton(self)
         self.rb_add.setText('Add')
         self.rb_add.setFont(font)

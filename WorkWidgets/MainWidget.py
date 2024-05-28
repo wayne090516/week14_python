@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
 from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget, QSlider, QMainWindow
 from PyQt6.QtGui import QPixmap, QPalette, QBrush, QMovie
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtCore import Qt, QSize, QTimer
 from WorkWidgets.AddStuWidget import AddStuWidget
 from WorkWidgets.DelStuWidget import DelStuWidget
 from WorkWidgets.ShowStuWidget import ShowStuWidget
@@ -17,8 +17,26 @@ class MainWidget(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
+        self.setWindowTitle('Student Management System')
+        self.resize(1200, 600)
+        self.movie = QMovie("WorkWidgets/source/loading.gif")
+        self.movie_label = QLabel(self)
+        self.movie_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.movie_label.setMovie(self.movie)
+        self.movie_label.setGeometry(QtCore.QRect(0, 0, 1200, 600))
+        
+        self.movie.start()
+        QTimer.singleShot(3000, self.end_of_movie)
+
         self.setObjectName("main_widget")
 
+    def end_of_movie(self):
+        if self.movie.state() == QMovie.MovieState.Running:
+            self.movie.stop()
+        self.movie_label.hide()
+        self.initUI()
+
+    def initUI(self):
         layout = QtWidgets.QGridLayout()
         function_widget = FunctionWidget()
         menu_widget = MenuWidget(function_widget.update_widget)
@@ -108,7 +126,6 @@ class MenuWidget(QtWidgets.QWidget):
     def stop_music(self):
         self.music.stop()  
         self.music_playing = False
-
 
 class FunctionWidget(QtWidgets.QStackedWidget):
     def __init__(self):
