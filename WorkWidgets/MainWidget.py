@@ -73,11 +73,11 @@ class MenuWidget(QtWidgets.QWidget):
 
         self.music = Music(os.path.join(os.getcwd(), "WorkWidgets/source/music.mp3")) 
         
-        self.volume_slider = QSlider(Qt.Orientation.Vertical)  # Create a slider
-        self.volume_slider.setValue(100)  # Set initial volume to 100
-        self.volume_slider.setMinimum(0)  # Set the minimum value to 0
-        self.volume_slider.setMaximum(100)  # Set the maximum value to 100
-        self.volume_slider.valueChanged.connect(self.music.set_volume)  # Connect the slider to the set_volume function
+        self.volume_slider = QSlider(Qt.Orientation.Vertical)  
+        self.volume_slider.setValue(100)
+        self.volume_slider.setMinimum(0) 
+        self.volume_slider.setMaximum(100) 
+        self.volume_slider.valueChanged.connect(self.music.set_volume) 
         self.volume_slider.setFixedWidth(20)
         set_volume = LabelComponent(14, "volume")
 
@@ -106,7 +106,7 @@ class MenuWidget(QtWidgets.QWidget):
         self.music_playing = True
 
     def stop_music(self):
-        self.music.stop()  # add a stop function in your music class
+        self.music.stop()  
         self.music_playing = False
 
 

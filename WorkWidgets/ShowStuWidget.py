@@ -37,11 +37,11 @@ class ShowStuWidget(QtWidgets.QWidget):
             self.scrollLayout.itemAt(i).widget().setParent(None)
 
         for student, details in students.items(): 
-            student_details = f"\t{student}:\n"
+            student_details = f"\t#---------------------------------#\n\n\t     {student}:\n"
             for score_detail in details.get('scores', []): 
                 subject = score_detail.get('subject', 'Unknown')
-                score = score_detail.get('score', 'Unknown')
-                student_details += f"\t\t{subject}: {score}\n"
+                score = (int)(score_detail.get('score', 'Unknown'))
+                student_details += f"\t\t     {subject}: {score}\n"
 
             student_label = QtWidgets.QLabel(student_details, self)
             student_label.setText(student_details)

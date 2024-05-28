@@ -30,7 +30,7 @@ class LineEditComponent(QtWidgets.QLineEdit):
         self.setStyleSheet("border: 1px solid #aaa; border-radius: 5px;")
 
 class ButtonComponent(QtWidgets.QPushButton):
-    def __init__(self, text, font_size=16):
+    def __init__(self, text, font_size=16, button_width=370, button_height=40):
         super().__init__()
         self.setText(text)
         self.setFont(QtGui.QFont("MS UI Gothic", font_size))
@@ -38,7 +38,9 @@ class ButtonComponent(QtWidgets.QPushButton):
         self.setStyleSheet("""
             ButtonComponent { 
                 background-color: #333; 
-                color:white; 
+                color:#ddd; 
+                width: 200px;
+                height: 30px;
                 border: none; 
                 border-radius: 5px;
             }

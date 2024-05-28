@@ -77,14 +77,14 @@ class DelStuWidget(QtWidgets.QWidget):
         print("del widget")
 
     def showEvent(self, event):
-        self.editor_label_del.clear()  # 清除所有的學生名字 
+        self.editor_label_del.clear() 
         self.service_ctrl.show_signal.connect(self.get_name)
         self.service_ctrl.start()   
         self.service_ctrl.show()
 
     def get_name(self, response):
         students = response['parameters']
-        self.service_ctrl.show_signal.disconnect(self.get_name)  # 斷開連接以避免重複添加名字
+        self.service_ctrl.show_signal.disconnect(self.get_name) 
         for student_name in students.keys():
             self.editor_label_del.addItem(student_name)
 
@@ -94,7 +94,6 @@ class DelStuWidget(QtWidgets.QWidget):
         self.editor_label_del.removeItem(self.editor_label_del.currentIndex())
         self.progress_bar.setValue(0)
         self.check_box.setChecked(False)
-        #self.message_label.setText(f"Student {student_name} has been deleted.")
         QMessageBox.information(self, "Send information", f"Student {student_name} has been deleted.")
             
 

@@ -17,7 +17,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         
 
         header_label = LabelComponent(20, "Modify Student")
-        next_step = LabelComponent(16, "Next step")
+        next_step = LabelComponent(16, "\nNext step")
         label_name = LabelComponent(16, "Name：")
         label_subject = LabelComponent(16, "Subject：")
 
@@ -112,7 +112,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         self.button_send.setEnabled(1)
         self.progress_bar.setValue(1)
         self.rb_add.setChecked(True)
-        self.message_label.setText("Input a subject and score.")
+        self.message_label.setText("\nInput a subject and score.")
         print("modify widget")
 
     def showEvent(self, event):
@@ -163,12 +163,12 @@ class ModifyStuWidget(QtWidgets.QWidget):
         if self.rb_modify.isChecked():
             self.editor_label_subject.hide()
             self.subject_combo_box.show()
-            self.message_label.setText("Choose a subject and input score.")
+            self.message_label.setText("\nChoose a subject and input score.")
             
         elif self.rb_add.isChecked():
             self.subject_combo_box.hide()
             self.editor_label_subject.show()
-            self.message_label.setText("Input a subject and score.")
+            self.message_label.setText("\nInput a subject and score.")
 
     def get_subjects_for_student(self, student_name):
         # Get subjects for the current student.

@@ -16,7 +16,7 @@ class AddStuWidget(QtWidgets.QWidget):
         next_step = LabelComponent(16, "Next step")
         # ------label & editor-----------------------------------------------------
         # name
-        name_label = LabelComponent(16, "Name: ")
+        name_label = LabelComponent(16, "Name:\t")
         self.editor_label_name = LineEditComponent("Name")
         self.editor_label_name.mousePressEvent = self.clear_editor_name
         self.editor_label_name.textChanged.connect(self.name_change)
@@ -66,16 +66,16 @@ class AddStuWidget(QtWidgets.QWidget):
         layout.addWidget(subject_label, 2, 0, 1, 1)
         layout.addWidget(score_label, 3, 0, 1, 1)
         # editor
-        layout.addWidget(self.editor_label_name, 1, 1, 1, 1)
-        layout.addWidget(self.editor_label_subject, 2, 1, 1, 1)
-        layout.addWidget(self.editor_label_score, 3, 1, 1, 1)
+        layout.addWidget(self.editor_label_name, 1, 1, 1, 2)
+        layout.addWidget(self.editor_label_subject, 2, 1, 1, 2)
+        layout.addWidget(self.editor_label_score, 3, 1, 1, 2)
         # button
-        layout.addWidget(self.button_query, 1, 2, 1, 1)
-        layout.addWidget(self.button_add, 3, 2, 1, 1)
+        layout.addWidget(self.button_query, 1, 3, 1, 1)
+        layout.addWidget(self.button_add, 3, 3, 1, 1)
         layout.addWidget(self.button_send, 6, 3, 1, 1)
         layout.addWidget(self.message_label, 5, 2, 1, 3)
         layout.addWidget(next_step, 5, 1, 1, 1)
-        layout.addWidget(self.progress_bar, 7, 0, 1, 4)  # or any other position you prefer
+        layout.addWidget(self.progress_bar, 7, 0, 1, 4)
         # ------row & column-------------------------------------------------------
         layout.setColumnStretch(0, 1)
         layout.setColumnStretch(1, 6)
@@ -118,25 +118,21 @@ class AddStuWidget(QtWidgets.QWidget):
         self.editor_label_name.clear()
 
     def subject_text_change(self, text):
-        # Only add progress the first time characters are entered
         if text.strip() and not self.subject_progress_added:
             self.progress_bar.setValue(self.progress_bar.value() + 1)
             self.subject_progress_added = True
 
     def clear_editor_subject(self, event):
         self.editor_label_subject.clear()
-        # Reset progress bar status for subject input box
         self.subject_progress_added = False
         
     def score_text_change(self, text):
-        # Only add progress the first time characters are entered
         if text.strip() and not self.score_progress_added:
             self.progress_bar.setValue(self.progress_bar.value() + 1)
             self.score_progress_added = True
 
     def clear_editor_score(self, event):
         self.editor_label_score.clear()
-        # Reset progress bar status for score input box
         self.score_progress_added = False
         
     def check_empty(self):
@@ -150,7 +146,6 @@ class AddStuWidget(QtWidgets.QWidget):
             name = self.editor_label_name.text()
             response = self.service_ctrl.query(name)
             if response.get('status') == 'failed':
-                #self.message_label.setText(f"{name} does not exist.")
                 QMessageBox.information(self, "Query information", f"{name} does not exist.")
                 self.editor_label_name.setEnabled(False)
                 self.button_add.setEnabled(True)
@@ -159,12 +154,10 @@ class AddStuWidget(QtWidgets.QWidget):
                 self.message_label.setText("Input student's subject & score")
                 self.query_pressed = True
             else:
-                #self.message_label.setText(f"{name} does exist")
                 QMessageBox.information(self, "Query information", f"{name} does exist.\nPlease input another name.")
 
     def add_act(self):
         if not self.editor_label_name.text().strip() or not self.editor_label_subject.text().strip() or not self.editor_label_score.text().strip():
-            #self.message_label.setText("Name, Subject and Score cannot be empty.")
             QMessageBox.information(self, "Add information", f"Name, Subject and Score cannot be empty.")
         else:
             name = self.editor_label_name.text()
@@ -175,11 +168,9 @@ class AddStuWidget(QtWidgets.QWidget):
                 self.scores[name] = {}
 
             if subject in self.scores[name]:
-                #self.message_label.setText(f"The subject {subject} is already in the records for student {name}.")
                 QMessageBox.information(self, "Add information", f"The subject {subject} is already in the records for student {name}.")
             else:
                 self.scores[name][subject] = score                
-                #self.message_label.setText(f"Name: {name},\nSubject: {subject},\nScore: {score}")
                 QMessageBox.information(self, "Add information", f"Name: {name},\nSubject: {subject},\nScore: {score}")
                 self.button_send.setEnabled(True)
                 self.add_pressed = True
@@ -192,8 +183,6 @@ class AddStuWidget(QtWidgets.QWidget):
             response = self.service_ctrl.send('add', {'name': name, 'scores': self.scores[name]})
             self.scores.pop(name, None)
             QMessageBox.information(self, "Send information", f"Student scores successfully sent.")
-            #self.message_label.setText("Student scores successfully sent.")
         else:
             QMessageBox.information(self, "Send information", f"No score to send.")
-            #self.message_label.setText("No score to send.")
         self.load()
