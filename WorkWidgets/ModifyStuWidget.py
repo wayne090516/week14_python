@@ -1,4 +1,6 @@
 from PyQt6 import QtWidgets, QtGui, QtCore
+from PyQt6.QtGui import QPixmap, QPalette, QBrush
+from PyQt6.QtCore import QSize
 from WorkWidgets.WidgetComponents import LabelComponent, LineEditComponent, ButtonComponent, ComboBoxComponent
 from client.ServiceController import ExecuteCommand
 from WorkWidgets.ShowAllWidget import ShowAllWidget
@@ -13,16 +15,24 @@ class ModifyStuWidget(QtWidgets.QWidget):
         self.names_list = names_list
         self.subject_dict = subject_dict
 
+        window_length = 400
+        window_width = 300
+
         self.setObjectName("modify_stu_widget")
         self.setWindowTitle("Modify Student")
-        self.setFixedSize(400, 300)
+        self.setFixedSize(window_length, window_width)
+
+        oImage = QPixmap("./WorkWidgets/images/background_2.jpg")
+        sImage = oImage.scaled(QSize(window_length, window_width))
+        palette = QPalette()
+        palette.setBrush(QPalette.ColorRole.Window, QBrush(sImage))
+        self.setPalette(palette)
 
         layout = QtWidgets.QGridLayout()
 
         # Name
-        content_label_name = LabelComponent(16, content="Name:", 
-                                            alignment="right", bg_color=None, 
-                                            font_color=None, border_color="lightgray")
+        content_label_name = LabelComponent(16, content="Name:", alignment="right", 
+                                            style=f"background: transparent; color: #00cc00;")
         
         self.combobox_name = ComboBoxComponent()
         self.name_list_parse(self.names_list)
@@ -32,9 +42,8 @@ class ModifyStuWidget(QtWidgets.QWidget):
         layout.addWidget(self.combobox_name, 0, 1, 1, 2)
 
         # Subject
-        content_label_subject = LabelComponent(16, content="Subject:", 
-                                               alignment="right", bg_color=None, 
-                                               font_color=None, border_color="lightgray")
+        content_label_subject = LabelComponent(16, content="Subject:", alignment="right", 
+                                               style=f"background: transparent; color: #00cc00;")
         
         self.combobox_subject = ComboBoxComponent()
         self.combobox_subject.currentTextChanged.connect(self.subject_change)
@@ -51,29 +60,28 @@ class ModifyStuWidget(QtWidgets.QWidget):
         layout.addWidget(self.editor_label_newsubject, 2, 1, 1, 2)
 
         # Score and Send-button
-        content_label_score = LabelComponent(16, content="Score:", 
-                                             alignment="right", bg_color=None, 
-                                             font_color=None, border_color="lightgray")
-        
+        content_label_score = LabelComponent(16, content="Score:", alignment="right",
+                                             style=f"background: transparent; color: #00cc00;")
         self.editor_label_score = LineEditComponent(16, default_content="Score",alignment="center")
         self.editor_label_score.mousePressEvent = self.editor_label_score.clear_editor_content
-        self.editor_label_score.setValidator(QtGui.QIntValidator(0, 100)) # QtGui.QIntValidator(min_value, max_value)
+        self.editor_label_score.setValidator(QtGui.QIntValidator(0, 100))
         self.editor_label_score.textChanged.connect(self.score_blanked)
         self.editor_label_score.setEnabled(False)
 
         layout.addWidget(content_label_score, 3, 0, 1, 1)
         layout.addWidget(self.editor_label_score, 3, 1, 1, 2)
 
-        self.button_send = ButtonComponent(16, content="Modify")
+        self.button_send = ButtonComponent(16, content="Modify", 
+                                           style='''ButtonComponent{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #808080, stop:1 #404040); border-radius: 5px; color: #00cc00}
+                                                    ButtonComponent:hover {background-color: #606060;}''')
         self.button_send.clicked.connect(self.send_pressed)
         self.button_send.setEnabled(False)
 
         layout.addWidget(self.button_send, 4, 0, 1, 3)
 
         # Respond-window 
-        self.respond_window = LabelComponent(16, content="", 
-                                             alignment="left", bg_color=None, 
-                                             font_color="red",border_color="lightgray")
+        self.respond_window = LabelComponent(16, content="", alignment="left", 
+                                             style=f"background: transparent; color: red;")
         
         layout.addWidget(self.respond_window, 5, 0, 1, 3)
         

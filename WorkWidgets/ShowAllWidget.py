@@ -17,14 +17,10 @@ class ShowAllWidget(QtWidgets.QWidget):
 
         self.show_all_layout = QtWidgets.QGridLayout()
         self.names, self.subjects_dict = self.get_refreshed_data()
-        self.name_scroll_label = ScrollLabelComponent(14, self.names, 
-                                                        bg_color=None, font_color=None, 
-                                                        border_color="lightgray", clickable=True)
+        self.name_scroll_label = ScrollLabelComponent(14, self.names, clickable=True, style="background: #404040;")
         self.name_scroll_label.labelClicked.connect(self.handle_name_clicked)
 
-        self.subject_scroll_label = ScrollLabelComponent(14, [], 
-                                                         bg_color=None, font_color=None, 
-                                                         border_color="lightgray", clickable=True)
+        self.subject_scroll_label = ScrollLabelComponent(14, [], clickable=True, style="background: #404040;")
 
         self.show_all_layout.addWidget(self.name_scroll_label, 0, 0)
         self.show_all_layout.addWidget(self.subject_scroll_label, 0, 1)
@@ -77,6 +73,3 @@ class ShowAllWidget(QtWidgets.QWidget):
         subjects = self.subjects_dict.get(label_content, [])
         self.subject_scroll_label.clear_labels()
         self.subject_scroll_label.add_labels(subjects)
-
-    # def get_selected_subject(self):
-    #     return self.subject_scroll_label.current_label.text() if self.subject_scroll_label.current_label else None

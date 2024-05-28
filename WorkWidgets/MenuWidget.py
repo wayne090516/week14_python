@@ -16,13 +16,23 @@ class MenuWidget(QtWidgets.QWidget):
         self.setObjectName("menu_widget")
 
         layout = QtWidgets.QGridLayout()
-        self.add_stu_button = ButtonComponent(16, content="Add student")
-        self.modify_stu_button = ButtonComponent(16, content="Modify student")
-        self.delete_stu_button = ButtonComponent(16, content="Delete student")
+        self.add_stu_button = ButtonComponent(16, content="Add student", 
+                                              style='''ButtonComponent{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #808080, stop:1 #404040); border-radius: 5px; color: #00cc00}
+                                                        ButtonComponent:hover {background-color: #606060;}''')
+        self.modify_stu_button = ButtonComponent(16, content="Modify student", 
+                                                 style='''ButtonComponent{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #808080, stop:1 #404040); border-radius: 5px; color: #00cc00}
+                                                            ButtonComponent:hover {background-color: #606060;}''')
+        self.delete_stu_button = ButtonComponent(16, content="Delete student", 
+                                                 style='''ButtonComponent{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #808080, stop:1 #404040); border-radius: 5px; color: #00cc00}
+                                                            ButtonComponent:hover {background-color: #606060;}''')
 
         self.add_stu_button.setEnabled(True)
         self.modify_stu_button.setEnabled(True)
         self.delete_stu_button.setEnabled(False)
+
+        self.add_stu_button.setFixedHeight(50)
+        self.modify_stu_button.setFixedHeight(50)
+        self.delete_stu_button.setFixedHeight(50)
 
         self.add_stu_button.clicked.connect(self.add_student_popup)
         self.modify_stu_button.clicked.connect(self.modify_student_popup)

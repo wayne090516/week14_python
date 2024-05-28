@@ -1,4 +1,6 @@
 from PyQt6 import QtWidgets
+from PyQt6.QtGui import QPixmap, QPalette, QBrush
+from PyQt6.QtCore import QSize
 from WorkWidgets.MenuWidget import MenuWidget
 from WorkWidgets.ShowAllWidget import ShowAllWidget
 from WorkWidgets.WidgetComponents import LabelComponent, ScrollLabelComponent, LineEditComponent, ButtonComponent
@@ -9,16 +11,19 @@ class MainWidget(QtWidgets.QWidget):
         super().__init__()
         self.setObjectName("main_widget")
 
+        oImage = QPixmap("./WorkWidgets/images/background_1.jpg")
+        sImage = oImage.scaled(QSize(700,500))
+        palette = QPalette()
+        palette.setBrush(QPalette.ColorRole.Window, QBrush(sImage))
+        self.setPalette(palette)
+
         main_layout = QtWidgets.QGridLayout()
-        name_label = LabelComponent(20, content="Name", 
-                                    alignment="center", bg_color=None, 
-                                    font_color=None, border_color="lightgray")
-        subject_label = LabelComponent(20, content="Subject", 
-                                       alignment="center", bg_color=None, 
-                                       font_color=None, border_color="lightgray")
-        menu_label = LabelComponent(20, content="Menu", 
-                                       alignment="center", bg_color=None, 
-                                       font_color=None, border_color="lightgray")
+        name_label = LabelComponent(20, content="Name", alignment="center", 
+                                    style="color: #00cc00;", image_path="./WorkWidgets/images/background_3.jpg")
+        subject_label = LabelComponent(20, content="Subject", alignment="center", 
+                                    style="color: #00cc00;", image_path="./WorkWidgets/images/background_3.jpg")
+        menu_label = LabelComponent(20, content="Menu", alignment="center", 
+                                    style="color: #00cc00;", image_path="./WorkWidgets/images/background_3.jpg")
 
         self.show_all_widget = ShowAllWidget()
         self.menu_widget = MenuWidget()
@@ -36,7 +41,7 @@ class MainWidget(QtWidgets.QWidget):
         main_layout.addWidget(menu_label, 0, 2, 1, 1)
 
         main_layout.addWidget(self.show_all_widget, 1, 0, 6, 2)
-        main_layout.addWidget(self.menu_widget, 4, 2, 3, 1)
+        main_layout.addWidget(self.menu_widget, 2, 2, 4, 1)
 
         for i in range(3):
             main_layout.setColumnStretch(i, 1)
