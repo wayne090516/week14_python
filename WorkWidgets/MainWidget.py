@@ -19,14 +19,14 @@ class MainWidget(QtWidgets.QWidget):
 
         self.setWindowTitle('Student Management System')
         self.resize(1200, 600)
-        self.movie = QMovie("WorkWidgets/source/loading.gif")
+        self.movie = QMovie("WorkWidgets/source/loading_.gif")
         self.movie_label = QLabel(self)
         self.movie_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.movie_label.setMovie(self.movie)
         self.movie_label.setGeometry(QtCore.QRect(0, 0, 1200, 600))
         
         self.movie.start()
-        QTimer.singleShot(3000, self.end_of_movie)
+        QTimer.singleShot(1500, self.end_of_movie)
 
         self.setObjectName("main_widget")
 
