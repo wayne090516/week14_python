@@ -31,8 +31,8 @@ class AddStuWidget(QtWidgets.QWidget):
 
         # Name and Query-button
         content_label_name = LabelComponent(16, content="Name:", alignment="right", 
-                                            style=f"background: transparent; color: #00cc00;")
-        self.editor_label_name = LineEditComponent(16, default_content="Name",alignment="left")
+                                            style="background: transparent; color: #00cc00;")
+        self.editor_label_name = LineEditComponent(16, default_content="Name",alignment="left", style="background: #ffffff; border-radius: 5px;")
         self.editor_label_name.mousePressEvent = self.editor_label_name.clear_editor_content
         self.editor_label_name.textChanged.connect(self.name_entered)
         layout.addWidget(content_label_name, 0, 0, 1, 1)
@@ -48,7 +48,7 @@ class AddStuWidget(QtWidgets.QWidget):
         # Subject and Add-button
         content_label_subject = LabelComponent(16, content="Subject:", alignment="right", 
                                                style=f"background: transparent; color: #00cc00;")
-        self.editor_label_subject = LineEditComponent(16, default_content="Subject",alignment="left")
+        self.editor_label_subject = LineEditComponent(16, default_content="Subject",alignment="left", style="background: #ffffff; border-radius: 5px;")
         self.editor_label_subject.mousePressEvent = self.editor_label_subject.clear_editor_content
         self.editor_label_subject.textChanged.connect(self.subject_blanked)
         self.editor_label_subject.setEnabled(False)
@@ -66,7 +66,7 @@ class AddStuWidget(QtWidgets.QWidget):
         # Score and Send-button
         content_label_score = LabelComponent(16, content="Score:", alignment="right", 
                                              style=f"background: transparent; color: #00cc00;")
-        self.editor_label_score = LineEditComponent(16, default_content="Score",alignment="left")
+        self.editor_label_score = LineEditComponent(16, default_content="Score",alignment="left", style="background: #ffffff; border-radius: 5px;")
         self.editor_label_score.mousePressEvent = self.editor_label_score.clear_editor_content
         self.editor_label_score.setValidator(QtGui.QIntValidator(0, 100)) 
         self.editor_label_score.textChanged.connect(self.score_blanked)

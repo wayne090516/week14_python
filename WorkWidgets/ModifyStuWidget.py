@@ -34,7 +34,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         content_label_name = LabelComponent(16, content="Name:", alignment="right", 
                                             style=f"background: transparent; color: #00cc00;")
         
-        self.combobox_name = ComboBoxComponent()
+        self.combobox_name = ComboBoxComponent(16, style="background-color: #ffffff; border-radius: 5px;")
         self.name_list_parse(self.names_list)
         self.combobox_name.currentTextChanged.connect(self.name_change)
 
@@ -45,10 +45,10 @@ class ModifyStuWidget(QtWidgets.QWidget):
         content_label_subject = LabelComponent(16, content="Subject:", alignment="right", 
                                                style=f"background: transparent; color: #00cc00;")
         
-        self.combobox_subject = ComboBoxComponent()
+        self.combobox_subject = ComboBoxComponent(16, style="background-color: #ffffff; border-radius: 5px;")
         self.combobox_subject.currentTextChanged.connect(self.subject_change)
 
-        self.editor_label_newsubject = LineEditComponent(16, default_content="New Subject",alignment="center")
+        self.editor_label_newsubject = LineEditComponent(16, default_content="New Subject",alignment="center", style="background: #ffffff; border-radius: 5px;")
         self.editor_label_newsubject.textChanged.connect(self.newsubject_blanked)
         self.editor_label_newsubject.mousePressEvent = self.editor_label_newsubject.clear_editor_content
 
@@ -62,7 +62,7 @@ class ModifyStuWidget(QtWidgets.QWidget):
         # Score and Send-button
         content_label_score = LabelComponent(16, content="Score:", alignment="right",
                                              style=f"background: transparent; color: #00cc00;")
-        self.editor_label_score = LineEditComponent(16, default_content="Score",alignment="center")
+        self.editor_label_score = LineEditComponent(16, default_content="Score",alignment="center", style="background: #ffffff; border-radius: 5px;")
         self.editor_label_score.mousePressEvent = self.editor_label_score.clear_editor_content
         self.editor_label_score.setValidator(QtGui.QIntValidator(0, 100))
         self.editor_label_score.textChanged.connect(self.score_blanked)

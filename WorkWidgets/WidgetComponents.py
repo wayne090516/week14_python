@@ -62,7 +62,7 @@ class LabelComponent(QtWidgets.QLabel):
         super().resizeEvent(event)
         
 class LineEditComponent(QtWidgets.QLineEdit):
-    def __init__(self, font_size=16, default_content="", alignment="left"):
+    def __init__(self, font_size=16, default_content="", alignment="left", style=None):
         super().__init__()
 
         if alignment == "left":
@@ -77,6 +77,9 @@ class LineEditComponent(QtWidgets.QLineEdit):
         self.setMinimumHeight(30)
         # self.setMaximumWidth(width)
         self.setFont(QtGui.QFont("微軟正黑體", font_size))
+
+        if style:
+            self.setStyleSheet(style)
 
     def clear_editor_content(self, event):
         self.clear()
@@ -185,6 +188,9 @@ class ClickableLabel(QtWidgets.QLabel):
         super().mousePressEvent(event)
 
 class ComboBoxComponent(QtWidgets.QComboBox):
-    def __init__(self, font_size=16):
+    def __init__(self, font_size=16, style=None):
         super().__init__()
         self.setFont(QtGui.QFont("微軟正黑體", font_size))
+        self.setMinimumSize(150, 30)
+        if style:
+            self.setStyleSheet(style)
