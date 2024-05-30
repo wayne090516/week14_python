@@ -29,7 +29,7 @@ class DeleteStuWidget(QtWidgets.QWidget):
         layout = QtWidgets.QGridLayout()
 
         self.confirm_button = ButtonComponent(16, content="CONFIRM", 
-                                              style='''ButtonComponent{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #808080, stop:1 #404040); border-radius: 5px; color: red}
+                                              style='''ButtonComponent{background: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 #808080, stop:1 #404040); border-radius: 5px; color: #FF8000}
                                                         ButtonComponent:hover {background-color: #606060;}''')
         self.confirm_button.clicked.connect(self.confirm_button_pressed)
         self.confirm_button.setEnabled(True)
